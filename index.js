@@ -13,7 +13,7 @@ app.use("/admin", adminRouter);
 
 
 async function main() {
-    await mongoose.connect("mongodb+srv://hrushikesh44:zm09jvPBTafrOSC7@cluster0.2lasb.mongodb.net/course-app");
+    await mongoose.connect("MONGODB_URL");
     app.listen(3000);
 }
 
