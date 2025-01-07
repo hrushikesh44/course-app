@@ -7,7 +7,7 @@ function auth(req, res, next) {
     const response = jwt.verify(token, JWT_ADMIN_PASSWORD);
 
     if(response){
-        req.userId = response.id;
+        req.adminId = response.id;
         next();
     }else{
         res.status(403).json({
