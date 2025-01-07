@@ -2,9 +2,10 @@ const { Router } = require("express");
 const z  = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { AdminModel } = require("../db");
+const { AdminModel,CourseModel } = require("../db");
 const { auth } = require("../middlewares/adminauth");
 const { JWT_ADMIN_PASSWORD } = require("../config");
+const course = require("./course");
 
 const adminRouter = Router();
 
@@ -26,10 +27,7 @@ adminRouter.post("/signup", async function(req, res) {
     }
 
     try{
-        const firstName = req.body.firstName;
-        const lastName = req.body.lastName;
-        const email = req.body.email;
-        const password = req.body.password;
+        const { firstName, lastName, email, password  } = req.body;
     
         const hashedPassword = await bcrypt.hash(password, 5);
     
@@ -64,9 +62,7 @@ adminRouter.post("/signin", async function(req, res) {
         return
     }
 
-    const email = req.body.email;
-    const password = req.body.password;
-
+    const { email, password} = req.body;
     const response = await AdminModel.findOne({
         email
     })
@@ -94,9 +90,70 @@ adminRouter.post("/signin", async function(req, res) {
 
 })
 
-adminRouter.get("/purchases", auth, function(req, res) {
+adminRouter.post("/course", auth, async function(req, res) {
+    const adminId = req.userId;
+    const { title, description, price, imageUrl } = req.body;
+
+    const newCourse = await CourseModel.create({
+        title,
+        description,
+        price,
+        imageUrl,
+        creatorId: adminId
+    })
+
     res.json({
-        message: "admin purchases page"
+        message: "course created",
+        courseId: newCourse._id
+    })
+    
+})
+
+adminRouter.put("/course/update", auth, async function(req, res) {
+    const adminId = req.userId;
+    const { title, description, price, imageUrl, courseId } = req.body;
+
+    const updateCourse = await CourseModel.updateOne({
+        _id: courseId,
+        adminId
+    }, {
+        title,
+        description,
+        price,
+        imageUrl
+    })
+
+    res.json({
+        message: "course updated",
+        courseId: updateCourse._id
+    })
+
+})
+
+adminRouter.get("/courses/bulk", auth, async function(req,res) {
+    const adminId = req.userId;
+
+    const courses = await CourseModel.find({
+        creatorId: adminId
+    })
+
+    res.json({
+        courses
+    })
+})
+
+adminRouter.put("/course/delete", auth, async function(req, res) {
+    const adminId = req.userId;
+    const courseId = req.body.courseId;
+
+    await CourseModel.findOneAndDelete({
+        _id: adminId
+    }, {
+        courseId
+    })
+
+    res.json({
+        message: "deleted successfully"
     })
 })
 
