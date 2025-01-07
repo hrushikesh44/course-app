@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "sdhuufuishduihiu";
+const JWT_ADMIN_PASSWORD = "sdhuufuishduihiu";
 
 function auth(req, res, next) {
     const token = req.headers.token;
 
-    const response = jwt.verify(token, JWT_SECRET);
+    const response = jwt.verify(token, JWT_ADMIN_PASSWORD);
 
     if(response){
         req.userId = response.id;
@@ -18,5 +18,5 @@ function auth(req, res, next) {
 
 module.exports = {
     auth,
-    JWT_SECRET
+    JWT_ADMIN_PASSWORD
 }

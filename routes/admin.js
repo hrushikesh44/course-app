@@ -3,7 +3,7 @@ const z  = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { AdminModel } = require("../db");
-const { auth,JWT_SECRET } = require("../auth");
+const { auth,JWT_ADMIN_PASSWORD } = require("../middlewares/adminauth");
 
 const adminRouter = Router();
 
@@ -85,7 +85,7 @@ adminRouter.post("/signin", async function(req, res) {
     } else {
         const token = jwt.sign({
             id: response._id.toString()
-        },JWT_SECRET)
+        },JWT_ADMIN_PASSWORD)
         res.json({
             token: token
         })

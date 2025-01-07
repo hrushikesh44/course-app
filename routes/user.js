@@ -3,7 +3,7 @@ const z = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../db");
-const { auth, JWT_SECRET } = require("../auth");
+const { auth, JWT_USER_PASSWORD } = require("../middlewares/userauth");
 
 const userRouter = Router();
 
@@ -81,7 +81,7 @@ userRouter.post("/signin", async function(req, res) {
     if(passwordMatch){
         const token = jwt.sign({
             id:response._id.toString()
-        }, JWT_SECRET);
+        }, JWT_USER_PASSWORD);
         res.json({
             token: token
         })
