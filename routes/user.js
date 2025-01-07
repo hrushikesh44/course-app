@@ -76,7 +76,7 @@ userRouter.post("/signin", async function(req, res) {
         })
     }
 
-    const passwordMatch = bcrypt.compare(password, response.password);
+    const passwordMatch = await bcrypt.compare(password, response.password);
 
     if(passwordMatch){
         const token = jwt.sign({
