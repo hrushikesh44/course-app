@@ -76,7 +76,7 @@ adminRouter.post("/signin", async function(req, res) {
         })
     }
 
-    const passwordMatch = await bcrypt.compare(password, response.password);
+    const passwordMatch = bcrypt.compare(password, response.password);
 
     if(!passwordMatch){
         res.json({
