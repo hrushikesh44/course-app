@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { AdminModel,CourseModel } = require("../db");
 const { auth } = require("../middlewares/adminauth");
-const { JWT_ADMIN_PASSWORD } = require("../config");
+require("dotenv").config();
 const course = require("./course");
 
 const adminRouter = Router();
@@ -82,7 +82,7 @@ adminRouter.post("/signin", async function(req, res) {
     } else {
         const token = jwt.sign({
             id: response._id.toString()
-        },JWT_ADMIN_PASSWORD)
+        },process.env.ADMIN_PASSWORD)
         res.json({
             token: token
         })
@@ -122,6 +122,12 @@ adminRouter.put("/course/update", auth, async function(req, res) {
         price,
         imageUrl
     })
+
+    if(!updateCourse){
+        res.json({
+            message: "you do not have access"
+        })
+    }
 
     res.json({
         message: "course updated",

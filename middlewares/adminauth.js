@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const { JWT_ADMIN_PASSWORD } = require("../config");
+require("dotenv").config();
 
 
 function auth(req, res, next) {
     const token = req.headers.token;
 
-    const response = jwt.verify(token, JWT_ADMIN_PASSWORD);
+    const response = jwt.verify(token, process.env.ADMIN_PASSWORD);
 
     if(response){
         req.userId = response.id;
@@ -18,6 +18,5 @@ function auth(req, res, next) {
 }
 
 module.exports = {
-    auth,
-    JWT_ADMIN_PASSWORD
+    auth
 }

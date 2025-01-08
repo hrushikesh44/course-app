@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../db");
 const { auth } = require("../middlewares/userauth");
-const { JWT_USER_PASSWORD } = require("../config")
+require("dotenv").config();
 
 const userRouter = Router();
 
@@ -82,7 +82,7 @@ userRouter.post("/signin", async function(req, res) {
     if(passwordMatch){
         const token = jwt.sign({
             id:response._id.toString()
-        }, JWT_USER_PASSWORD);
+        }, process.env.USER_PASSWORD);
         res.json({
             token: token
         })
