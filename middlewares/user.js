@@ -1,11 +1,10 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-
-function auth(req, res, next) {
+function userMiddleware(req, res, next) {
     const token = req.headers.token;
 
-    const response = jwt.verify(token, process.env.ADMIN_PASSWORD);
+    const response = jwt.verify(token, process.env.USER_PASSWORD);
 
     if(response){
         req.userId = response.id;
@@ -18,5 +17,5 @@ function auth(req, res, next) {
 }
 
 module.exports = {
-    auth
+    userMiddleware
 }

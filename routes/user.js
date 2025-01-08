@@ -2,8 +2,8 @@ const { Router } = require("express");
 const z = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { UserModel } = require("../db");
-const { auth } = require("../middlewares/userauth");
+const { UserModel, PurchaseModel } = require("../db");
+const { userMiddleware } = require("../middlewares/user");
 require("dotenv").config();
 
 const userRouter = Router();
@@ -94,15 +94,15 @@ userRouter.post("/signin", async function(req, res) {
 
 })
 
-userRouter.get("/purchases", auth, async function(req, res) {
-    const userId = req.userId;
-    const purchases = await UserModel.find({
-        userId
-    })
+userRouter.get("/purchases", userMiddleware, async function(req, res) {
+    const userId = req.userId; 
+
+    const purchases = await PurchaseModel.findOne({
+        userId,
+    });
 
     res.json({
-        message: "user purchase page",
-        purchases
+        purchases: purchases
     })
 })
 

@@ -3,7 +3,7 @@ const z  = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { AdminModel,CourseModel } = require("../db");
-const { auth } = require("../middlewares/adminauth");
+const { adminMiddleware } = require("../middlewares/admin");
 require("dotenv").config();
 const course = require("./course");
 
@@ -90,7 +90,7 @@ adminRouter.post("/signin", async function(req, res) {
 
 })
 
-adminRouter.post("/course", auth, async function(req, res) {
+adminRouter.post("/course", adminMiddleware, async function(req, res) {
     const adminId = req.userId;
     const { title, description, price, imageUrl } = req.body;
 
@@ -109,7 +109,7 @@ adminRouter.post("/course", auth, async function(req, res) {
     
 })
 
-adminRouter.put("/course/update", auth, async function(req, res) {
+adminRouter.put("/course/update", adminMiddleware, async function(req, res) {
     const adminId = req.userId;
     const { title, description, price, imageUrl, courseId } = req.body;
 
@@ -136,7 +136,7 @@ adminRouter.put("/course/update", auth, async function(req, res) {
 
 })
 
-adminRouter.get("/courses/bulk", auth, async function(req,res) {
+adminRouter.get("/courses/bulk", adminMiddleware, async function(req,res) {
     const adminId = req.userId;
 
     const courses = await CourseModel.find({
@@ -148,7 +148,7 @@ adminRouter.get("/courses/bulk", auth, async function(req,res) {
     })
 })
 
-adminRouter.put("/course/delete", auth, async function(req, res) {
+adminRouter.put("/course/delete", adminMiddleware, async function(req, res) {
     const adminId = req.userId;
     const courseId = req.body.courseId;
 
